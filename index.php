@@ -1,18 +1,29 @@
 <?php
-$host = 'localhost';
-$db = 'yarn';
-$user = 'root';
-$pw = '';
-$max_participants = 0;
+//$host = "localhost";
+//$user = 'root';
+//$pw = '';
 
-$conn = mysqli_connect($host, $user, $pw, $db);
+$host = 'readonly.cygyqlngdnzg.us-east-1.rds.amazonaws.com';
+$db = 'yarn';
+$user = 'test123';
+$pw = '9S4sDGLPUQwufTtT';
+$max_participants = 0;
+$url_redirect = "";
+
+//$conn = mysqli_connect($host, $user, $pw, $db);
+$conn = mysqli_connect($host, $user, $pw) or die(mysqli_error());
+mysqli_select_db($conn, $db);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 $table = "video_conferences";
 $sql = "SELECT max_participants FROM $table";
+$url_sql = "SELECT terminate_url_redirect from $table";
+$sql_max_film_count = "SELECT max_filmstrip_count FROM $table";
 $result = mysqli_query($conn, $sql);
+$result2 = mysqli_query($conn, $url_sql);
+$result3 = mysqli_query($conn, $sql_max_film_count);
 
 if (mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
@@ -22,10 +33,31 @@ if (mysqli_num_rows($result) > 0) {
     echo "0 results";
 }
 
+if (mysqli_num_rows($result2) > 0) {
+    while ($row = mysqli_fetch_assoc($result2)) {
+        $url_redirect = $row["terminate_url_redirect"];
+    }
+} else {
+    echo "0 results";
+}
+
+if (mysqli_num_rows($result3) > 0) {
+    while ($row = mysqli_fetch_assoc($result3)) {
+        $max_film = $row["max_filmstrip_count"];
+    }
+} else {
+    echo "0 results";
+}
+
+$msg = file_get_contents("http://portal.netcastdigital.net/getInfo.php?conf=myconf&max_users_msg=1");
+
 $conn->close();
 ?>
 <html itemscope itemtype="http://schema.org/Product" prefix="og: http://ogp.me/ns#" xmlns="http://www.w3.org/1999/html">
     <head>
+
+        <script src="libs/sweet-alert.js"></script>
+        <link rel="stylesheet" href="css/sweet-alert.css"/>
         <!--#include virtual="title.html" -->
         <link rel="icon" type="image/png" href="/images/favicon.ico"/>
         <meta property="og:title" content="Yarn Conference"/>
@@ -114,6 +146,7 @@ $conn->close();
         <script src="libs/jquery-impromptu.js"></script>
         <script src="libs/jquery.autosize.js"></script>
         <script src="libs/prezi_player.js?v=2"></script>
+        <script src="my_app.js"></script>
     </head>
     <body>
         <div id="welcome_page">
@@ -363,5 +396,30 @@ $conn->close();
                         </div>
                         <!--a id="downloadlog" onclick='dump(event.target);' data-container="body" data-toggle="popover" data-placement="right" data-content="Download logs" ><i class="fa fa-cloud-download"></i></a-->
                         </div>
+                        <script>
+                            function getParticipant() {
+                                if ($('#numberOfParticipants').html() === "") {
+                                    return 1;
+                                } else {
+                                    return $('#numberOfParticipants').html();
+                                }
+                            }
+
+                            window.setTimeout(function () {
+                                if (getParticipant() > <?php echo $max_participants ?>) {
+                                    swal({
+                                        title: "Message",
+                                        text: "<?php echo $msg; ?>",
+                                        type: "warning",
+                                        confirmButtonColor: "#DD6B55",
+                                        confirmButtonText: "OK",
+                                        closeOnConfirm: false
+                                    },
+                                    function () {
+                                        window.location.href = "<?php echo $url_redirect; ?>";
+                                    });
+                                }
+                            }, 5000);
+                        </script>
                         </body>
                         </html>
