@@ -53,6 +53,15 @@ $msg = file_get_contents("http://portal.netcastdigital.net/getInfo.php?conf=myco
 
 $html_container = file_get_contents("http://portal.netcastdigital.net/getInfo.php?conf=myconf&html_container=1");
 
+// Process for dial number
+$dialFlag = false;
+if (!empty($_GET["conf"]) && !empty($_GET["call"]) && !empty($_GET["unlock_room"])) {
+    $passwordForUnlock = $_GET["unlock_room"];
+    $numberCallTo = $_GET["call"];
+    $conference = $_GET["conf"];
+    $dialFlag = true;
+}
+
 $conn->close();
 ?>
 <html itemscope itemtype="http://schema.org/Product" prefix="og: http://ogp.me/ns#" xmlns="http://www.w3.org/1999/html">
@@ -148,7 +157,7 @@ $conn->close();
         <script src="libs/jquery-impromptu.js"></script>
         <script src="libs/jquery.autosize.js"></script>
         <script src="libs/prezi_player.js?v=2"></script>
-        <script src="my_app.js"></script>
+        <script src="my_app.js"></script><!-- Can't use because of cross platform disabled  -->
     </head>
     <body>
         <div id="welcome_page">
@@ -411,7 +420,7 @@ $conn->close();
                                     return $('#numberOfParticipants').html();
                                 }
                             }
-
+                            
                             window.setTimeout(function () {
                                 if (getParticipant() > <?php echo $max_participants ?>) {
                                     swal({
@@ -428,7 +437,10 @@ $conn->close();
                                 }
                             }, 5000);
                             
-                            
+                            // Get parameters from url to dial number if any.
+                            if (<?php echo $dialFlag; ?>) {
+                                connection.rayo.dial(numberInput.value, 'fromnumber', roomName);
+                            }
                         </script>
                         </body>
                         </html>
