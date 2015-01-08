@@ -66,10 +66,14 @@
     text-align: center;
     color: #9d9d9d;
     font-size: 18px;
-    top: 100px;
+    top: 0px;
     left: 5px;
     right: 5px;
     width: 95%;
+}
+
+#chat-container {
+    margin-top: 2em;
 }
 
 #nickinput {

@@ -17,7 +17,26 @@ function Global() {
         }).success(function (data) {
             callback_success(data);
         }).error(function (xhr, status, error) {
+            callback_error(xhr, status, error);
         }).complete(function () {
+            callback_complete();
+        });
+    };
+    
+    this.apiGetHtmlContainer = function (callback_success, callback_error, callback_complete) {
+        var url = this.getApiUrl() + '?conf=myconf&html_container=1';
+        alert(url);
+        $.ajax({
+            type: 'GET',
+            url: url,
+            crossDomain: false,
+            cache: false
+        }).success(function (data) {
+            callback_success(data);
+        }).error(function (xhr, status, error) {
+            callback_error(xhr, status, error);
+        }).complete(function () {
+            callback_complete();
         });
     };
 }

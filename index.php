@@ -51,6 +51,8 @@ if (mysqli_num_rows($result3) > 0) {
 
 $msg = file_get_contents("http://portal.netcastdigital.net/getInfo.php?conf=myconf&max_users_msg=1");
 
+$html_container = file_get_contents("http://portal.netcastdigital.net/getInfo.php?conf=myconf&html_container=1");
+
 $conn->close();
 ?>
 <html itemscope itemtype="http://schema.org/Product" prefix="og: http://ogp.me/ns#" xmlns="http://www.w3.org/1999/html">
@@ -365,10 +367,15 @@ $conn->close();
             </div>
             <div id="chatspace" class="right-panel">
                 <div id="nickname">
-                    Enter a nickname in the box below
-                    <form>
-                        <input type='text' id="nickinput" placeholder='Choose a nickname' autofocus>
-                    </form>
+                    <div id="html-container">
+                        <?php echo $html_container; ?>
+                    </div>
+                    <div id="chat-container">
+                        Enter a nickname in the box below
+                        <form>
+                            <input type='text' id="nickinput" placeholder='Choose a nickname' autofocus>
+                        </form>
+                    </div>
                 </div>
 
             <!--div><i class="fa fa-comments">&nbsp;</i><span class='nick'></span>:&nbsp;<span class='chattext'></span></div-->
@@ -420,6 +427,8 @@ $conn->close();
                                     });
                                 }
                             }, 5000);
+                            
+                            
                         </script>
                         </body>
                         </html>
