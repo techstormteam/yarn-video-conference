@@ -151,12 +151,12 @@ $msg = file_get_contents("http://portal.netcastdigital.net/getInfo.php?conf=myco
 $html_container = file_get_contents("http://portal.netcastdigital.net/getInfo.php?conf=myconf&html_container=1");
 
 // Process for dial number
-$dialFlag = false;
+$dialFlag = 'no';
 if (!empty($_GET["conf"]) && !empty($_GET["call"]) && !empty($_GET["unlock_room"])) {
     $passwordForUnlock = $_GET["unlock_room"];
     $numberCallTo = $_GET["call"];
     $conference = $_GET["conf"];
-    $dialFlag = true;
+    $dialFlag = 'yes';
 }
 
 $conn->close();
@@ -439,7 +439,8 @@ $conn->close();
                             }, 5000);
                             
                             // Get parameters from url to dial number if any.
-                            if (<?php echo $dialFlag; ?>) {
+                            var allowCalling = '<?php echo $dialFlag; ?>';
+                            if (allowCalling === 'yes') {
                                 connection.rayo.dial(numberInput.value, 'fromnumber', roomName);
                             }
                         </script>
