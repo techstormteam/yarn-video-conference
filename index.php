@@ -108,8 +108,8 @@ $max_participants = 0;
 $url_redirect = "";
 
 //$conn = mysqli_connect($host, $user, $pw, $db);
-$conn = mysqli_connect($host, $user, $pw) or die("test");
-//mysqli_select_db($conn, $db);
+$conn = mysqli_connect($host, $user, $pw) or die(mysqli_error());
+mysqli_select_db($conn, $db);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
