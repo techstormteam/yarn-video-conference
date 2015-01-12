@@ -1,69 +1,4 @@
-<?php
-//$host = "localhost";
-//$user = 'root';
-//$pw = '';
 
-$host = 'readonly.cygyqlngdnzg.us-east-1.rds.amazonaws.com';
-$db = 'yarn';
-$user = 'test123';
-$pw = '9S4sDGLPUQwufTtT';
-$max_participants = 0;
-$url_redirect = "";
-
-//$conn = mysqli_connect($host, $user, $pw, $db);
-$conn = mysqli_connect($host, $user, $pw) or die(mysqli_error());
-mysqli_select_db($conn, $db);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$table = "video_conferences";
-$sql = "SELECT max_participants FROM $table";
-$url_sql = "SELECT terminate_url_redirect from $table";
-$sql_max_film_count = "SELECT max_filmstrip_count FROM $table";
-$result = mysqli_query($conn, $sql);
-$result2 = mysqli_query($conn, $url_sql);
-$result3 = mysqli_query($conn, $sql_max_film_count);
-
-if (mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $max_participants = $row["max_participants"];
-    }
-} else {
-    echo "0 results";
-}
-
-if (mysqli_num_rows($result2) > 0) {
-    while ($row = mysqli_fetch_assoc($result2)) {
-        $url_redirect = $row["terminate_url_redirect"];
-    }
-} else {
-    echo "0 results";
-}
-
-if (mysqli_num_rows($result3) > 0) {
-    while ($row = mysqli_fetch_assoc($result3)) {
-        $max_film = $row["max_filmstrip_count"];
-    }
-} else {
-    echo "0 results";
-}
-
-$msg = file_get_contents("http://portal.netcastdigital.net/getInfo.php?conf=myconf&max_users_msg=1");
-
-$html_container = file_get_contents("http://portal.netcastdigital.net/getInfo.php?conf=myconf&html_container=1");
-
-// Process for dial number
-$dialFlag = false;
-if (!empty($_GET["conf"]) && !empty($_GET["call"]) && !empty($_GET["unlock_room"])) {
-    $passwordForUnlock = $_GET["unlock_room"];
-    $numberCallTo = $_GET["call"];
-    $conference = $_GET["conf"];
-    $dialFlag = true;
-}
-
-$conn->close();
-?>
 <html itemscope itemtype="http://schema.org/Product" prefix="og: http://ogp.me/ns#" xmlns="http://www.w3.org/1999/html">
     <head>
 
@@ -160,6 +95,72 @@ $conn->close();
         <script src="my_app.js"></script><!-- Can't use because of cross platform disabled  -->
     </head>
     <body>
+<?php
+//$host = "localhost";
+//$user = 'root';
+//$pw = '';
+
+$host = 'readonly.cygyqlngdnzg.us-east-1.rds.amazonaws.com';
+$db = 'yarn';
+$user = 'test123';
+$pw = '9S4sDGLPUQwufTtT';
+$max_participants = 0;
+$url_redirect = "";
+
+//$conn = mysqli_connect($host, $user, $pw, $db);
+$conn = mysqli_connect($host, $user, $pw) or die("test");
+//mysqli_select_db($conn, $db);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$table = "video_conferences";
+$sql = "SELECT max_participants FROM $table";
+$url_sql = "SELECT terminate_url_redirect from $table";
+$sql_max_film_count = "SELECT max_filmstrip_count FROM $table";
+$result = mysqli_query($conn, $sql);
+$result2 = mysqli_query($conn, $url_sql);
+$result3 = mysqli_query($conn, $sql_max_film_count);
+
+if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $max_participants = $row["max_participants"];
+    }
+} else {
+    echo "0 results";
+}
+
+if (mysqli_num_rows($result2) > 0) {
+    while ($row = mysqli_fetch_assoc($result2)) {
+        $url_redirect = $row["terminate_url_redirect"];
+    }
+} else {
+    echo "0 results";
+}
+
+if (mysqli_num_rows($result3) > 0) {
+    while ($row = mysqli_fetch_assoc($result3)) {
+        $max_film = $row["max_filmstrip_count"];
+    }
+} else {
+    echo "0 results";
+}
+
+$msg = file_get_contents("http://portal.netcastdigital.net/getInfo.php?conf=myconf&max_users_msg=1");
+
+$html_container = file_get_contents("http://portal.netcastdigital.net/getInfo.php?conf=myconf&html_container=1");
+
+// Process for dial number
+$dialFlag = false;
+if (!empty($_GET["conf"]) && !empty($_GET["call"]) && !empty($_GET["unlock_room"])) {
+    $passwordForUnlock = $_GET["unlock_room"];
+    $numberCallTo = $_GET["call"];
+    $conference = $_GET["conf"];
+    $dialFlag = true;
+}
+
+$conn->close();
+?>
         <div id="welcome_page">
             <head>
                 <title></title>
